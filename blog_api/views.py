@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from blog.models import Post
 from .serializers import PostSerializer
 from rest_framework.permissions import BasePermission, DjangoModelPermissionsOrAnonReadOnly, SAFE_METHODS, IsAuthenticated
@@ -19,18 +20,58 @@ class PostUserWritePermission(BasePermission):
         return obj.author == request.user # If the user sending the request is the author then also allow edit/delete
 
 
-class PostList(viewsets.ModelViewSet):
-    permission_classes = [PostUserWritePermission]
+class PostList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.postobjects.all()
     serializer_class = PostSerializer
 
-    def get_object(self, queryset=None, **kwargs):
-        item = self.kwargs.get('pk')
-        return get_object_or_404(Post, slug=item)
+
+class PostDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermission):
+    permission_classes = [PostUserWritePermission]
+    serializer_class = PostSerializer
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        return Post.objects.filter(slug=slug)
+
+
+class AuthorPostList(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(author=user)
+
+
+class PostListDetailFilter(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['slug']
+
+
+# Filters options
+# '^' Starts-with search
+# '=' Exact matches
+# '@' Full-text search (works only in PostgreSQL)
+# '$' Regex search
+
+
+# Viewset 
+# class PostList(viewsets.ModelViewSet):
+#     permission_classes = [PostUserWritePermission]
+#     serializer_class = PostSerializer
+
+#     def get_object(self, queryset=None, **kwargs):
+#         item = self.kwargs.get('pk')
+#         return get_object_or_404(Post, slug=item)
 
     
-    # Define Custom Queryset
-    def get_queryset(self):
-        return Post.objects.all()
+#     # Define Custom Queryset
+#     def get_queryset(self):        
+#         return Post.objects.all()
 
 
 # class PostList(viewsets.ViewSet):
@@ -64,18 +105,6 @@ class PostList(viewsets.ModelViewSet):
 
     # def destroy(self, request, pk=None):
     #     pass
-
-
-# class PostList(generics.ListCreateAPIView):
-#     permission_classes = [IsAuthenticated]
-#     queryset = Post.postobjects.all()
-#     serializer_class = PostSerializer
-
-
-# class PostDetail(generics.RetrieveUpdateDestroyAPIView, PostUserWritePermission):
-#     permission_classes = [PostUserWritePermission]
-#     queryset = Post.postobjects.all()
-#     serializer_class = PostSerializer
     
 
 
@@ -94,7 +123,7 @@ Used for delete-only endpoints for a single model instance.
 Used for update-only endpoints for a single model instance.
 ##ListCreateAPIView
 Used for read-write endpoints to represent a collection of model instances.
-RetrieveUpdateAPIView
+#RetrieveUpdateAPIView
 Used for read or update endpoints to represent a single model instance.
 #RetrieveDestroyAPIView
 Used for read or delete endpoints to represent a single model instance.
