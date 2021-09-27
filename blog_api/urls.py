@@ -1,4 +1,4 @@
-from .views import PostList, PostDetail, AuthorPostList, PostListDetailFilter
+from .views import PostList, PostDetail, AuthorPostList, PostListDetailFilter, CreatePost, EditPost, AdminPostDetail, DeletePost
 from django.urls import path
 #from rest_framework.routers import DefaultRouter
 
@@ -9,6 +9,11 @@ urlpatterns = [
     path('author/', AuthorPostList.as_view(), name='authorpostlist'),
     path('search/', PostListDetailFilter.as_view(), name='postsearch'),
     path('', PostList.as_view(), name='listcreate'),
+    #Post Admin URLs
+    path('admin/create/', CreatePost.as_view(), name='createpost'),
+    path('admin/edit/postdetail/<int:pk>/', AdminPostDetail.as_view(), name='adminpostdetail'),
+    path('admin/edit/<int:pk>/', EditPost.as_view(), name='editpost'),
+    path('admin/delete/<int:pk>', DeletePost.as_view(), name='deletepost'),
 ]
 
 
