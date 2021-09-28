@@ -16,7 +16,6 @@ class PostList(viewsets.ModelViewSet):
         item = self.kwargs.get('pk')
         return get_object_or_404(Post, slug=item)
 
-    
     # Define Custom Queryset
     def get_queryset(self):        
         return Post.objects.all()
@@ -51,7 +50,6 @@ class AdminManagePost(viewsets.ModelViewSet):
         item = self.kwargs.get('pk')
         return get_object_or_404(Post, id=item)
 
-    
     # Define Custom Queryset
     def get_queryset(self):        
         return Post.objects.all()
