@@ -5,11 +5,11 @@ from rest_framework import viewsets, filters, generics, permissions
 #from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# Display Posts
+# Display and Manage Posts
 
 #Viewset 
 
-class PostList(viewsets.ModelViewSet):
+class ManagePosts(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_object(self, queryset=None, **kwargs):
@@ -42,17 +42,17 @@ class PostListDetailFilter(generics.ListAPIView):
 
 #Post Admin
 
-class AdminManagePost(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = PostSerializer
+# class AdminManagePost(viewsets.ModelViewSet):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = PostSerializer
 
-    def get_object(self, queryset=None, **kwargs):
-        item = self.kwargs.get('pk')
-        return get_object_or_404(Post, id=item)
+#     def get_object(self, queryset=None, **kwargs):
+#         item = self.kwargs.get('pk')
+#         return get_object_or_404(Post, id=item)
 
-    # Define Custom Queryset
-    def get_queryset(self):        
-        return Post.objects.all()
+#     # Define Custom Queryset
+#     def get_queryset(self):        
+#         return Post.objects.all()
 
 
 # Without ModelViewSet
