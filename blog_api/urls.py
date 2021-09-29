@@ -12,7 +12,7 @@ router.register('', ManagePosts, basename='post')
 urlpatterns = [
     path('author/', AuthorPostList.as_view(), name='authorpostlist'),
     path('search/', PostListDetailFilter.as_view(), name='postsearch'),
-    path('', include(router.urls)),    
+    path('', include(router.urls)),
 ]
 
 # urlpatterns = [
