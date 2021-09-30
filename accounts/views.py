@@ -1,9 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import RegisterUserSerializer
-from rest_framework.permissions import AllowAny
+from .serializers import RegisterUserSerializer, UserInfoSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import generics
+from django.contrib.auth.models import User
 
 
 class UserCreate(APIView):
@@ -30,3 +32,12 @@ class BlacklistTokenView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserInfo(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserInfoSerializer
+
+    def get_queryset(self):
+        id = self.request.user.id
+        return User.objects.filter(id=id)
