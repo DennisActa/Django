@@ -25,7 +25,7 @@ class ManagePosts(viewsets.ModelViewSet):
 
     # Define Custom Post for image upload
     def post(self, request, format=None):
-        print(request.data)
+        #print(request.data)
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
