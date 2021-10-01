@@ -60,7 +60,7 @@ class AuthorPostList(generics.ListAPIView):
 
 class PostListDetailFilter(generics.ListAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = FrontendPostSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['slug']
 
