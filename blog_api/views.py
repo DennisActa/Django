@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from blog.models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer, FrontendPostSerializer
 from rest_framework import viewsets, filters, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -32,6 +32,18 @@ class ManagePosts(viewsets.ModelViewSet):
     #         return Response(serializer.data, status=status.HTTP_200_OK)
     #     else:
     #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FrontendPosts(viewsets.ModelViewSet):
+    serializer_class = FrontendPostSerializer
+
+    def get_object(self, queryset=None, **kwargs):
+        item = self.kwargs.get('pk')
+        return get_object_or_404(Post, slug=item)
+
+    # Define Custom Queryset
+    def get_queryset(self):        
+        return Post.objects.all()
 
 
 # Posts by author

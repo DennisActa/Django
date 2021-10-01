@@ -1,13 +1,13 @@
-#from .views import PostList, PostDetail, AuthorPostList, PostListDetailFilter, CreatePost, EditPost, AdminPostDetail, DeletePost
-from .views import ManagePosts, AuthorPostList, PostListDetailFilter
+from .views import ManagePosts, AuthorPostList, PostListDetailFilter, FrontendPosts
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 app_name = 'blog_api'
 
 router = DefaultRouter()
-#router.register(r'admin/managepost', PostList, basename='managepost')
-router.register('', ManagePosts, basename='post')
+router.register(r'posts', FrontendPosts, basename='frontendpost'),
+router.register('', ManagePosts, basename='post'),
+
 
 urlpatterns = [
     path('author/', AuthorPostList.as_view(), name='authorpostlist'),
