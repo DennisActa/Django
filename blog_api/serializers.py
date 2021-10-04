@@ -15,15 +15,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ('category', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'status', 'published')
-
-
-class FrontendPostSerializer(serializers.ModelSerializer):
-    author = AuthorSerializer(many=False, read_only=True)
-    category = CategorySerializer(many=False, read_only=True)
+    authorUserName = serializers.CharField(read_only=True, source="author.username")
+    categoryName = serializers.CharField(read_only=True, source="category.name")
 
     class Meta:
         model = Post
-        fields = ('category', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'status', 'published')
+        fields = ('category', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'status', 'published', 'authorUserName', 'categoryName')
+
+
+# class FrontendPostSerializer(serializers.ModelSerializer):
+#     author = AuthorSerializer(many=False, read_only=True)
+#     category = CategorySerializer(many=False, read_only=True)
+
+#     class Meta:
+#         model = Post
+#         fields = ('category', 'id', 'title', 'image', 'slug', 'author', 'excerpt', 'content', 'status', 'published')
